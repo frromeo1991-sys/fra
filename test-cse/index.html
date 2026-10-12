@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CSE PRO - gestione cantieri, sopralluoghi, rilievi multipli e verbali PDF Romeo Safety.">
+    <title>CSE PRO - Romeo Safety Italia</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+    <div class="contenitore-principale">
+        <header class="hero">
+            <div class="hero-logo">
+                <img src="logo-romeo.png" alt="Romeo Safety Italia" onerror="this.onerror=null;this.src='https://fra1991xy-ui.github.io/francescoromeo/logo-romeo.png';">
+            </div>
+            <div>
+                <p class="eyebrow">CSE PRO</p>
+                <h1>Verbale sopralluogo CSE</h1>
+            </div>
+        </header>
+
+        <section class="active-site-card" aria-labelledby="active-site-title">
+            <div>
+                <p class="eyebrow">Cantiere attivo</p>
+                <h2 id="active-site-title"><span id="active-site-name">Nessun cantiere selezionato</span></h2>
+                <p id="active-site-meta">Crea o seleziona un cantiere prima di generare un sopralluogo.</p>
+            </div>
+            <div class="active-site-actions">
+                <select id="site-switcher" aria-label="Cambia cantiere attivo"></select>
+                <button type="button" class="btn-secondary" id="btn-manage-sites">Cantieri</button>
+                <button type="button" class="btn-primary" id="btn-new-inspection">Nuovo sopralluogo</button>
+            </div>
+        </section>
+
+        <section id="sites-panel" class="panel" hidden>
+            <div class="panel-title">
+                <div>
+                    <p class="eyebrow">Gestione</p>
+                    <h2>Cantieri</h2>
+                </div>
+                <button type="button" class="btn-secondary" id="btn-new-site">Nuovo cantiere</button>
+            </div>
+
+            <form id="site-form" class="form-card" hidden>
+                <input type="hidden" id="site-id">
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="site-name">
+                        Nome cantiere
+                        <input type="text" id="site-name" placeholder="Es. R3" required>
+                    </label>
+                    <label class="gruppo-form" for="site-code">
+                        Codice / sigla
+                        <input type="text" id="site-code" placeholder="Es. R3">
+                    </label>
+                </div>
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="site-client">
+                        Committente
+                        <input type="text" id="site-client" placeholder="Es. STMicroelectronics">
+                    </label>
+                    <label class="gruppo-form" for="site-address">
+                        Indirizzo / sito
+                        <input type="text" id="site-address" placeholder="Es. Agrate Brianza (MB)">
+                    </label>
+                </div>
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="site-contractor">
+                        Impresa affidataria predefinita
+                        <input type="text" id="site-contractor" placeholder="Ragione sociale affidataria">
+                    </label>
+                    <label class="gruppo-form" for="site-job-code">
+                        Codice commessa
+                        <input type="text" id="site-job-code" placeholder="Codice interno">
+                    </label>
+                </div>
+                <label class="gruppo-form" for="site-notes">
+                    Note cantiere
+                    <textarea id="site-notes" rows="3" placeholder="Dati utili per PDF, archivio o futura sincronizzazione."></textarea>
+                </label>
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="site-cover">
+                        Foto principale / planimetria cantiere
+                        <input type="file" id="site-cover" accept="image/*">
+                    </label>
+                    <label class="gruppo-form" for="site-client-logo">
+                        Logo cliente opzionale
+                        <input type="file" id="site-client-logo" accept="image/*">
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btn-cancel-site">Annulla</button>
+                    <button type="submit" class="btn-primary">Salva cantiere</button>
+                </div>
+            </form>
+
+            <div id="sites-list" class="cards-list"></div>
+        </section>
+
+        <section id="inspection-panel" class="panel" hidden>
+            <div class="panel-title">
+                <div>
+                    <p class="eyebrow">Sopralluogo</p>
+                    <h2>Nuovo verbale</h2>
+                </div>
+                <button type="button" class="btn-secondary" id="btn-close-inspection">Chiudi</button>
+            </div>
+
+            <form id="inspection-form" class="form-card">
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="inspection-date">
+                        Data sopralluogo
+                        <input type="date" id="inspection-date" required>
+                    </label>
+                    <label class="gruppo-form" for="inspection-technician">
+                        Tecnico / CSE
+                        <input type="text" id="inspection-technician" placeholder="Nome coordinatore" required>
+                    </label>
+                </div>
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="inspection-affidataria">
+                        Spett.le impresa affidataria
+                        <input type="text" id="inspection-affidataria" placeholder="Ragione sociale affidataria">
+                    </label>
+                    <label class="gruppo-form" for="inspection-referente">
+                        c.a. referente affidataria
+                        <input type="text" id="inspection-referente" placeholder="Referente">
+                    </label>
+                </div>
+                <div class="riga-doppia">
+                    <label class="gruppo-form" for="inspection-responsabile">
+                        p.c. responsabile dei lavori
+                        <input type="text" id="inspection-responsabile" placeholder="Nome responsabile">
+                    </label>
+                    <label class="gruppo-form" for="inspection-esecutrice">
+                        Impresa esecutrice / sub
+                        <input type="text" id="inspection-esecutrice" placeholder="Ragione sociale esecutrice">
+                    </label>
+                </div>
+                <div class="riga-doppia blocco-azzurro">
+                    <label class="gruppo-form" for="inspection-building">
+                        Fabbricato
+                        <input type="text" id="inspection-building" placeholder="Es. Corpo A">
+                    </label>
+                    <label class="gruppo-form" for="inspection-floor">
+                        Piano
+                        <input type="text" id="inspection-floor" placeholder="Es. Terzo piano">
+                    </label>
+                </div>
+                <fieldset class="area-radio">
+                    <legend>Attivita lavorative sospese durante il sopralluogo?</legend>
+                    <label><input type="radio" name="inspection-suspended" value="NO" checked> NO</label>
+                    <label><input type="radio" name="inspection-suspended" value="SI"> SI</label>
+                </fieldset>
+
+                <div class="findings-toolbar">
+                    <div>
+                        <h3>Osservazioni del sopralluogo</h3>
+                    </div>
+                    <button type="button" class="btn-primary" id="btn-add-finding">+ Aggiungi rilievo</button>
+                </div>
+                <div id="findings-list"></div>
+
+                <section class="inspection-photos" aria-labelledby="photos-title">
+                    <h3 id="photos-title">Foto del sopralluogo</h3>
+                    <div class="photo-slots">
+                        <div class="photo-slot" data-photo-slot="1">
+                            <div class="photo-frame"><img id="inspection-photo-preview-1" alt="Foto 1 del sopralluogo" hidden><span data-photo-placeholder>Foto 1</span></div>
+                            <label class="btn-secondary photo-picker" for="inspection-photo-1">Carica foto 1</label>
+                            <input class="visually-hidden" type="file" id="inspection-photo-1" accept="image/*">
+                            <p class="photo-name" id="inspection-photo-name-1"></p>
+                            <button type="button" class="btn-secondary" data-remove-photo="1" hidden>Rimuovi foto 1</button>
+                        </div>
+                        <div class="photo-slot" data-photo-slot="2">
+                            <div class="photo-frame"><img id="inspection-photo-preview-2" alt="Foto 2 del sopralluogo" hidden><span data-photo-placeholder>Foto 2</span></div>
+                            <label class="btn-secondary photo-picker" for="inspection-photo-2">Carica foto 2</label>
+                            <input class="visually-hidden" type="file" id="inspection-photo-2" accept="image/*">
+                            <p class="photo-name" id="inspection-photo-name-2"></p>
+                            <button type="button" class="btn-secondary" data-remove-photo="2" hidden>Rimuovi foto 2</button>
+                        </div>
+                    </div>
+                </section>
+
+                <p id="inspection-status" class="status-message" role="status" aria-live="polite" hidden></p>
+                <div class="form-actions sticky-actions">
+                    <button type="button" class="btn-secondary" id="btn-reset-inspection">Pulisci</button>
+                    <button type="button" class="btn-primary" id="btn-generate-inspection">Genera con AI</button>
+                    <button type="submit" class="btn-primary" id="btn-save-inspection" hidden>Salva verbale</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="archive-panel" class="panel">
+            <div class="panel-title">
+                <div>
+                    <p class="eyebrow">Archivio</p>
+                    <h2>Verbali generati</h2>
+                </div>
+                <div class="archive-filters">
+                    <select id="archive-site-filter" aria-label="Filtra per cantiere"></select>
+                    <select id="archive-status-filter" aria-label="Filtra per stato">
+                        <option value="ATTIVO">Solo attivi</option>
+                        <option value="ARCHIVIATO">Archiviati</option>
+                    </select>
+                </div>
+            </div>
+            <div id="archive-list" class="cards-list"></div>
+        </section>
+    </div>
+
+    <template id="finding-template">
+        <article class="finding-card" data-finding>
+            <div class="finding-head">
+                <h4 data-finding-title>Rilievo 01</h4>
+                <div class="mini-actions">
+                    <button type="button" class="btn-icon" data-action="up" title="Sposta su">↑</button>
+                    <button type="button" class="btn-icon" data-action="down" title="Sposta giu">↓</button>
+                    <button type="button" class="btn-icon" data-action="duplicate" title="Duplica">⧉</button>
+                    <button type="button" class="btn-icon danger" data-action="delete" title="Elimina">×</button>
+                </div>
+            </div>
+            <label class="gruppo-form">
+                Cosa hai trovato?
+                <textarea rows="3" data-field="observation" placeholder="Es. Operai sul ponteggio senza parapetto sul lato esterno." required></textarea>
+            </label>
+            <div class="ai-result" data-ai-result hidden>
+                <label class="gruppo-form">
+                    Descrizione attività
+                    <textarea rows="3" data-field="activityDescription"></textarea>
+                </label>
+                <label class="gruppo-form">
+                    Misure di sicurezza attuate
+                    <textarea rows="3" data-field="safetyMeasures"></textarea>
+                </label>
+                <label class="gruppo-form">
+                    Misure correttive
+                    <textarea rows="3" data-field="correctiveMeasures"></textarea>
+                </label>
+            </div>
+            <details class="finding-options">
+                <summary>Disposizione operativa</summary>
+                <label class="gruppo-form">
+                    <select data-field="timing">
+                        <option value="Messa in sicurezza immediata">Messa in sicurezza immediata</option>
+                        <option value="Attivita sospesa fino ad adempimento">Attivita sospesa fino ad adempimento</option>
+                        <option value="Messa in sicurezza entro 2 giorni">Messa in sicurezza entro 2 giorni</option>
+                        <option value="Messa in sicurezza entro 3 giorni">Messa in sicurezza entro 3 giorni</option>
+                        <option value="Messa in sicurezza giornata">Messa in sicurezza giornata</option>
+                    </select>
+                </label>
+            </details>
+        </article>
+    </template>
+
+    <script src="jspdf.umd.min.js"></script>
+    <script src="assets.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
